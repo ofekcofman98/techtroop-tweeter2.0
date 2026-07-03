@@ -1,37 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { CreateTweet } from '../components/CreateTweet';
 import { TweetCard } from '../components/TweetCard';
 import type { Tweet } from '../lib/types';
+import { createTweetOnServer, fetchTweets } from '../lib/api';
 
 const HARDCODED_USER = "Ofek";
 
 export const Home: React.FC = () => {
-  const [tweets, setTweets] = useState<Tweet[]>(() => {
-    const savedTweets = localStorage.getItem('tweets');
-    return savedTweets ? JSON.parse(savedTweets) : [];
-  });
+    const [tweets, setTweets] = useState<Tweet[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    localStorage.setItem('tweets', JSON.stringify(tweets));
-  }, [tweets])
+    const loadTweets = async () => {
+        try {
+            setIsLoading(true);
+            const data = await fetchTweets();
+            setTweets(data);
+        }
+        catch (err) {
+            setError('Could not load tweets from server.');
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
 
-  const handleAddTweet = (content: string) => {
-    const newTweet: Tweet = {
-        id: crypto.randomUUID(),
-        userName: HARDCODED_USER,
-        content: content,
-        createdAt: new Date().toISOString()
-    };
+    useEffect(() => {
+        loadTweets();
+    }, [])
 
-    setTweets((prevTweets) => [
-        ...prevTweets,
-        newTweet
-        ]);
+    
+    const handleAddTweet = async (
+        content: string, 
+        onSuccess: () => void
+    ) => {
+        setError("");
+        setIsSubmitting(true);
+
+        const newTweet: Tweet = {
+            id: crypto.randomUUID(),
+            userName: HARDCODED_USER,
+            content: content,
+            date: new Date().toISOString()
+        };
+
+        try {
+            await createTweetOnServer(newTweet);
+            onSuccess();
+
+            await loadTweets();
+        }
+        catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Failed to submit tweet.");
+            }
+        }
+        finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
         <div>
-            <CreateTweet onTweetSubmit={handleAddTweet} />
+            {error && (
+                <div>
+                    {error}
+                </div>
+            )}
+
+            <CreateTweet 
+                onTweetSubmit={handleAddTweet} 
+                isSubmitting={isSubmitting}
+            />
+
+            {isLoading ? (
+                <div>
+                    Loading tweets...
+                </div>
+            ) : (
             <div>
                 {tweets.map((tweet) => (
                     <TweetCard 
@@ -40,6 +89,7 @@ export const Home: React.FC = () => {
                     />
                 ))}
             </div>
+            )}
         </div>
     )
 

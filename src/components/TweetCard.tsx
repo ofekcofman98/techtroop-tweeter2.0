@@ -10,7 +10,7 @@ export const TweetCard: React.FC<TweetCardProps> = ({ tweet }) => {
         <div>
             <div>
                 <span>{tweet.userName}</span>
-                <span>{tweet.createdAt}</span>
+                <span>{tweet.date? new Date(tweet.date).toLocaleString() : ''}</span>
             </div>
             <p>
                 {tweet.content}
