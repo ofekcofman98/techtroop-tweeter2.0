@@ -4,9 +4,11 @@ import { TweetCard } from '../components/TweetCard';
 import type { Tweet } from '../lib/types';
 import { createTweetOnServer, fetchTweets } from '../lib/api';
 
-const HARDCODED_USER = "Ofek";
+interface HomeProps {
+  username: string;
+}
 
-export const Home: React.FC = () => {
+export const Home: React.FC<HomeProps> = ({ username }) => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export const Home: React.FC = () => {
 
         const newTweet: Tweet = {
             id: crypto.randomUUID(),
-            userName: HARDCODED_USER,
+            userName: username,
             content: content,
             date: new Date().toISOString()
         };
