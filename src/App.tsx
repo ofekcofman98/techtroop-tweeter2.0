@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
 import { Profile } from './pages/Profile';
+import { TweetsProvider } from './lib/TweetsContext';
 
 const USERNAME_FALLBACK = 'Ofek';
 
@@ -19,24 +20,26 @@ function App() {
 
   return (
     <BrowserRouter>
+    <TweetsProvider>
       <div>
         <Navbar/>
         <Routes>
           <Route 
             path='/' 
             element={<Home username={username} />}
-          />
+            />
           <Route 
             path='/profile'
             element={
               <Profile
-                currentUsername={username}
-                onUsernameChange={handleUsernameChange}
+              currentUsername={username}
+              onUsernameChange={handleUsernameChange}
               />
             }  
-          />
-        </Routes>
-      </div>
+            />
+          </Routes>
+        </div>
+      </TweetsProvider>
     </BrowserRouter>
   )
 }
