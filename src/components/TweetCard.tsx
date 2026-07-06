@@ -7,12 +7,12 @@ interface TweetCardProps {
 
 export const TweetCard: React.FC<TweetCardProps> = ({ tweet }) => {
     return (
-        <div>
-            <div>
-                <span>{tweet.userName}</span>
-                <span>{tweet.date? new Date(tweet.date).toLocaleString() : ''}</span>
+        <div className='tweet-card'>
+            <div className='tweet-card-header'>
+                <span className='tweet-username'>{tweet.userName}</span>
+                <span className='tweet-date'>{tweet.date? new Date(tweet.date).toLocaleString() : ''}</span>
             </div>
-            <p>
+            <p className='tweet-content'>
                 {tweet.content}
             </p>
         </div>

@@ -66,24 +66,24 @@ export const Home: React.FC<HomeProps> = ({ username }) => {
     }
 
     return (
-        <div>
+        <div className='home'>
             {error && (
-                <div>
+                <div className='tweet-error'>
                     {error}
                 </div>
             )}
 
-            <CreateTweet 
-                onTweetSubmit={handleAddTweet} 
+            <CreateTweet
+                onTweetSubmit={handleAddTweet}
                 isSubmitting={isSubmitting}
             />
 
             {isLoading ? (
-                <div>
+                <div className='loading'>
                     Loading tweets...
                 </div>
             ) : (
-            <div>
+            <div className='tweet-list'>
                 {tweets.map((tweet) => (
                     <TweetCard 
                     key={tweet.id}

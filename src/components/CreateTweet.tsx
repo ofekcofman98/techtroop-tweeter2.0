@@ -24,21 +24,23 @@ export const CreateTweet: React.FC<CreateTweetProps> = ({ onTweetSubmit, isSubmi
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <textarea 
+        <form className='tweet-form' onSubmit={handleSubmit}>
+            <textarea
+                className='tweet-textarea'
                 placeholder='What you have in mind...'
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 disabled={isSubmitting}
             />
-            <div>
+            <div className='tweet-actions'>
                 {isOverLimit && (
-                    <div>
-                        The tweet can't contain more then {contentLimit} chars. 
+                    <div className='tweet-error'>
+                        The tweet can't contain more then {contentLimit} chars.
                     </div>
                 )}
 
                 <button
+                    className='tweet-button'
                     type='submit'
                     disabled={isButtonDisabled}
                 >
