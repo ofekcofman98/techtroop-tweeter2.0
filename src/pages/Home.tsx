@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from 'react';
+import React, { useEffect } from 'react';
 import { CreateTweet } from '../components/CreateTweet';
 import { TweetCard } from '../components/TweetCard';
 import { useTweets } from '../lib/TweetsContext';
